@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<title>Flashback: the Quest for Identity - dpoly JS</title>
+	</head>
+	<body>
+		<div align="center">
+		<h1>Flashback: the Quest for Identity - dpoly JS</h1>
+		<div style="width: 480px;">
+			<canvas id="screen" width="480" height="256"></canvas>
+			<div align="left">
+				<input type="button" value="Pause" onclick="onPlay()" id="playButton" />
+			</div>
+		</div>
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="dpoly.min.js"></script>
+		<script type="text/javascript">
+			dpoly.init("screen");
+			dpoly.start();
+			function onPlay() {
+				dpoly.pause( );
+				var button = document.getElementById("playButton");
+				if (dpoly.m_playing) {
+					button.value = "Pause";
+				} else {
+					button.value = "Play";
+				}
+			}
+		</script>
+		</div>
+	</body>
+</html>
