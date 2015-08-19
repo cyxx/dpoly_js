@@ -17,7 +17,7 @@ var dpoly = {
 		this.m_pos = 2;
 		this.m_playing = true;
 		this.setDefaultPalette( );
-		this.m_timer = setInterval( function( ) { dpoly.doTick( ) }, 20 );
+		this.m_timer = setInterval( function( ) { dpoly.doTick( ) }, 15 );
 	},
 
 	pause : function( ) {

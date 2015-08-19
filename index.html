@@ -11,6 +11,7 @@
 				<input type="button" value="Pause" onclick="onPlay()" id="playButton" />
 			</div>
 		</div>
+		<audio id="music" src="music/intro.ogg"></audio>
 		<script type="text/javascript" src="data_intro.js"></script>
 		<script type="text/javascript" src="decode.js"></script>
 		<script type="text/javascript" src="dpoly.js"></script>
@@ -18,12 +19,15 @@
 			dpoly.init("screen");
 			dpoly.decode( window.atob( dat_intro_cmp ) );
 			dpoly.start();
+			music.play( );
 			function onPlay() {
 				dpoly.pause( );
 				var button = document.getElementById("playButton");
 				if (dpoly.m_playing) {
+					music.play( );
 					button.value = "Pause";
 				} else {
+					music.pause( );
 					button.value = "Play";
 				}
 			}
