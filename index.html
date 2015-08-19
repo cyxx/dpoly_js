@@ -18,6 +18,15 @@
 		<script type="text/javascript" src="dpoly.min.js"></script>
 -->
 		<script type="text/javascript">
+			var CUTSCENES = [
+				"debut.cmp.txt",   "debut.ogg",   0,
+				"espions.cmp.txt", "reunion.ogg", 0,
+				"intro.cmp.txt",   "intro.ogg",   0,
+				"logos.cmp.txt",   "logo.ogg",    0,
+				"taxi.cmp.txt",    "taxi.ogg",    0,
+				"voyage.cmp.txt",  "voyage.ogg",  0
+			];
+			var NUM = 6;
 
 			player.init( "screen" );
 
@@ -26,11 +35,11 @@
 				if ( xhr.readyState == 4 && xhr.status == 200 ) {
 					player.decode( atob( xhr.responseText ) );
 					player.start( );
-					music.src = "music/intro.ogg";
+					music.src = "music/" + CUTSCENES[ NUM + 1 ];
 					music.play( );
 				}
 			}
-			xhr.open("GET", "cine/intro.cmp.txt", true);
+			xhr.open("GET", "cine/" + CUTSCENES[ NUM + 0 ], true);
 			xhr.send();
 
 			function onPlay() {
