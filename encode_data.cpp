@@ -124,7 +124,7 @@ static void encode(const char *path) {
 	}
 	FILE *fp = fopen(path, "rb");
 	if (fp) {
-		fprintf(stdout, "var dat_%s = '", name);
+//		fprintf(stdout, "var dat_%s = '", name);
 		Base64Encoder encoder;
 		memset(&encoder, 0, sizeof(encoder));
 		while (1) {
@@ -135,7 +135,7 @@ static void encode(const char *path) {
 			encoder.encodeChar(c);
 		}
 		encoder.finish();
-		fprintf(stdout, "';\n");
+//		fprintf(stdout, "';\n");
 		fclose(fp);
 	}
 }

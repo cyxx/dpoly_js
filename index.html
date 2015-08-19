@@ -11,18 +11,28 @@
 				<input type="button" value="Pause" onclick="onPlay()" id="playButton" />
 			</div>
 		</div>
-		<audio id="music" src="music/intro.ogg"></audio>
-		<script type="text/javascript" src="data_intro.js"></script>
+		<audio id="music"></audio>
 		<script type="text/javascript" src="decode.js"></script>
 		<script type="text/javascript" src="player.js"></script>
 <!--
 		<script type="text/javascript" src="dpoly.min.js"></script>
 -->
 		<script type="text/javascript">
-			player.init("screen");
-			player.decode( window.atob( dat_intro_cmp ) );
-			player.start();
-			music.play( );
+
+			player.init( "screen" );
+
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if ( xhr.readyState == 4 && xhr.status == 200 ) {
+					player.decode( atob( xhr.responseText ) );
+					player.start( );
+					music.src = "music/intro.ogg";
+					music.play( );
+				}
+			}
+			xhr.open("GET", "cine/intro.cmp.txt", true);
+			xhr.send();
+
 			function onPlay() {
 				player.pause( );
 				var button = document.getElementById("playButton");
