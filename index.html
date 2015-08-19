@@ -11,10 +11,12 @@
 				<input type="button" value="Pause" onclick="onPlay()" id="playButton" />
 			</div>
 		</div>
-		<script type="text/javascript" src="data.js"></script>
-		<script type="text/javascript" src="dpoly.min.js"></script>
+		<script type="text/javascript" src="data_intro.js"></script>
+		<script type="text/javascript" src="decode.js"></script>
+		<script type="text/javascript" src="dpoly.js"></script>
 		<script type="text/javascript">
 			dpoly.init("screen");
+			dpoly.decode( window.atob( dat_intro_cmp ) );
 			dpoly.start();
 			function onPlay() {
 				dpoly.pause( );

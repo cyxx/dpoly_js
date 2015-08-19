@@ -107,10 +107,24 @@ struct Base64Encoder {
 	}
 };
 
-static void encode(const char *path, const char *name) {
+static void encode(const char *path) {
+	char name[32];
+	{
+		const char *p = strrchr(path, '/');
+		if (p) {
+			strncpy(name, p + 1, sizeof(name) - 1);
+		} else {
+			strncpy(name, path, sizeof(name) - 1);
+		}
+		name[sizeof(name) - 1] = 0;
+		char *q = strchr(name, '.');
+		if (q) {
+			*q = '_';
+		}
+	}
 	FILE *fp = fopen(path, "rb");
 	if (fp) {
-		fprintf(stdout, "var %s = '", name);
+		fprintf(stdout, "var dat_%s = '", name);
 		Base64Encoder encoder;
 		memset(&encoder, 0, sizeof(encoder));
 		while (1) {
@@ -129,9 +143,8 @@ static void encode(const char *path, const char *name) {
 static uint8_t _buf[1 << 16];
 
 int main(int argc, char *argv[]) {
-	if (argc >= 3) {
-		encode(argv[1], "g_pol");
-		encode(argv[2], "g_cmd");
+	if (argc == 3 && strcmp(argv[1], "-base64") == 0) {
+		encode(argv[2]);
 	} else if (argc == 2) {
 		FILE *fp = fopen(argv[1], "r");
 		if (fp) {

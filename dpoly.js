@@ -11,10 +11,6 @@ var dpoly = {
 
 	init : function( canvas ) {
 		this.m_canvas = document.getElementById( canvas );
-//		this.m_cmd = window.atob( g_cmd );
-		this.m_cmd = this.decode( window.atob( dat_cmd ) );
-//		this.m_pol = window.atob( g_pol );
-		this.m_pol = this.decode( window.atob( dat_pol ) );
 	},
 
 	start : function( ) {
@@ -29,12 +25,12 @@ var dpoly = {
 	},
 
 	readByte : function( buf, pos ) {
-		var value = buf.charCodeAt( pos );
+		var value = buf[ pos ];
 		return value;
 	},
 
 	readWord : function( buf, pos ) {
-		var value = buf.charCodeAt( pos ) * 256 + buf.charCodeAt( pos + 1 );
+		var value = buf[ pos ] * 256 + buf[ pos + 1 ];
 		return value;
 	},
 
@@ -330,28 +326,42 @@ var dpoly = {
 		context.restore( );
 	},
 
+	readUint16BE : function( data, offset ) {
+		var value = data.charCodeAt( offset ) * 256;
+		value += data.charCodeAt( offset + 1 );
+		return value;
+	},
+
+	readUint32BE : function( data, offset ) {
+		var value = this.readUint16BE( data, offset ) << 16;
+		value |= this.readUint16BE( data, offset + 2 );
+		return value;
+	},
+
 	decode : function( data ) {
-		var out = '';
-		var i = 0;
-		while (i < data.length) {
-			var mask = data.charCodeAt( i );
-			++i;
-			for (var bit = 0; bit < 8 && i < data.length; ++bit) {
-				if ((mask & (1 << bit)) == 0) {
-					out += data.charAt( i );
-					++i;
-				} else {
-					var offset = data.charCodeAt( i ) * 256 + data.charCodeAt( i + 1 );
-					i += 2;
-					var len = (offset >> 12) + 3;
-					offset &= 4095;
-					for (var j = 0; j < len; ++j) {
-						var chr = out[out.length - offset];
-						out += chr;
-					}
-				}
-			}
+		var offset = 0;
+		var packedSize = this.readUint32BE( data, offset ); offset += 4;
+		console.log("POL size=" + packedSize );
+		if ( packedSize & (1 << 31) ) {
+			packedSize = (1 << 32) - packedSize;
+			this.m_pol = data.slice( offset, offset + packedSize );
+		} else {
+			var size = this.readUint32BE( data, offset + packedSize - 4 );
+			var dat_pol = data.slice( offset, offset + packedSize );
+			var ret = decoder.decode( dat_pol );
+			this.m_pol = decoder.m_out;
 		}
-		return out;
+		offset += packedSize;
+		packedSize = this.readUint32BE( data, offset ); offset += 4;
+		console.log("CMD size=" + packedSize);
+		if ( packedSize & (1 << 31) ) {
+			packedSize = (1 << 32) - packedSize;
+			this.m_cmd = data.slice( offset, offset + packedSize );
+		} else {
+			var size = this.readUint32BE( data, offset + packedSize - 4 );
+			var dat_cmd = data.slice( offset, offset + packedSize );
+			var ret = decoder.decode( dat_cmd );
+			this.m_cmd = decoder.m_out;
+		}
 	}
 }
