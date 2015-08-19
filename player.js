@@ -1,4 +1,4 @@
-var dpoly = {
+var player = {
 	m_playing : false,
 	m_yield : 0,
 	m_clear : false,
@@ -17,7 +17,7 @@ var dpoly = {
 		this.m_pos = 2;
 		this.m_playing = true;
 		this.setDefaultPalette( );
-		this.m_timer = setInterval( function( ) { dpoly.doTick( ) }, 15 );
+		this.m_timer = setInterval( function( ) { player.doTick( ) }, 15 );
 	},
 
 	pause : function( ) {
@@ -343,7 +343,7 @@ var dpoly = {
 		var packedSize = this.readUint32BE( data, offset ); offset += 4;
 		console.log("POL size=" + packedSize );
 		if ( packedSize & (1 << 31) ) {
-			packedSize = (1 << 32) - packedSize;
+			packedSize = 0x100000000 - packedSize;
 			this.m_pol = data.slice( offset, offset + packedSize );
 		} else {
 			var size = this.readUint32BE( data, offset + packedSize - 4 );
@@ -355,7 +355,7 @@ var dpoly = {
 		packedSize = this.readUint32BE( data, offset ); offset += 4;
 		console.log("CMD size=" + packedSize);
 		if ( packedSize & (1 << 31) ) {
-			packedSize = (1 << 32) - packedSize;
+			packedSize = 0x100000000 - packedSize;
 			this.m_cmd = data.slice( offset, offset + packedSize );
 		} else {
 			var size = this.readUint32BE( data, offset + packedSize - 4 );

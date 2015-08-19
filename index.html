@@ -1,10 +1,10 @@
 <html>
 	<head>
-		<title>Flashback: the Quest for Identity - dpoly JS</title>
+		<title>Flashback: the Quest for Identity - player JS</title>
 	</head>
 	<body>
 		<div align="center">
-		<h1>Flashback: the Quest for Identity - dpoly JS</h1>
+		<h1>Flashback: the Quest for Identity - player JS</h1>
 		<div style="width: 480px;">
 			<canvas id="screen" width="480" height="256"></canvas>
 			<div align="left">
@@ -14,16 +14,19 @@
 		<audio id="music" src="music/intro.ogg"></audio>
 		<script type="text/javascript" src="data_intro.js"></script>
 		<script type="text/javascript" src="decode.js"></script>
-		<script type="text/javascript" src="dpoly.js"></script>
+		<script type="text/javascript" src="player.js"></script>
+<!--
+		<script type="text/javascript" src="dpoly.min.js"></script>
+-->
 		<script type="text/javascript">
-			dpoly.init("screen");
-			dpoly.decode( window.atob( dat_intro_cmp ) );
-			dpoly.start();
+			player.init("screen");
+			player.decode( window.atob( dat_intro_cmp ) );
+			player.start();
 			music.play( );
 			function onPlay() {
-				dpoly.pause( );
+				player.pause( );
 				var button = document.getElementById("playButton");
-				if (dpoly.m_playing) {
+				if (player.m_playing) {
 					music.play( );
 					button.value = "Pause";
 				} else {
