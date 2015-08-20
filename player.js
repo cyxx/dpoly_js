@@ -299,9 +299,9 @@ var player = {
 			offset += 2;
 			var ry = this.toSignedWord( this.readWord( this.m_pol, offset ) );
 			offset += 2;
-			context.scale( rx, ry / rx );
+			context.scale( rx, ry );
 			context.beginPath( );
-			context.arc( 0, 0, rx, 0, 2 * Math.PI, false );
+			context.arc( 0, 0, 1, 0, 2 * Math.PI, false );
 			context.closePath( );
 			context.fill( );
 		} else if (count == 0) {
