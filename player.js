@@ -13,13 +13,13 @@ var player = {
 
 	init : function( canvas ) {
 		this.m_canvas = document.getElementById( canvas );
+		this.m_timer = setInterval( function( ) { player.doTick( ) }, 15 );
 	},
 
 	start : function( pos ) {
 		this.m_pos = this.m_startPos = pos;
 		this.m_playing = true;
 		this.setDefaultPalette( );
-		this.m_timer = setInterval( function( ) { player.doTick( ) }, 15 );
 	},
 
 	pause : function( ) {
@@ -68,13 +68,8 @@ var player = {
 			var opcode = this.readNextByte( );
 //			window.console.log('opcode=' + opcode + ' pos=' + this.m_pos);
 			if (opcode & 0x80) {
-				if ( 1 ) { // loop
-					this.m_pos = this.m_startPos;
-					this.setDefaultPalette( );
-				} else {
-					this.m_playing = false;
-				}
-				continue;
+				this.m_playing = false;
+				break;
 			}
 			this.m_opcode = opcode >> 2;
 			switch (this.m_opcode) {

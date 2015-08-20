@@ -8,7 +8,7 @@
 		<div style="width: 480px;">
 			<canvas id="screen" width="480" height="256"></canvas>
 			<div align="left">
-				<input type="button" value="Pause" onclick="onPlay()" id="playButton" />
+				<input type="button" value="Play" onclick="onPlay()" id="playButton" />
 			</div>
 		</div>
 		<audio id="music"></audio>
@@ -43,15 +43,9 @@
 			xhr.send();
 
 			function onPlay() {
-				player.pause( );
-				var button = document.getElementById("playButton");
-				if (player.m_playing) {
-					music.play( );
-					button.value = "Pause";
-				} else {
-					music.pause( );
-					button.value = "Play";
-				}
+				player.start( CUTSCENES[ NUM ].offset );
+				music.src = "music/" + CUTSCENES[ NUM ].music;
+				music.play( );
 			}
 		</script>
 		</div>
