@@ -19,14 +19,14 @@
 -->
 		<script type="text/javascript">
 			var CUTSCENES = [
-				"debut.cmp.txt",   "debut.ogg",   0,
-				"espions.cmp.txt", "reunion.ogg", 0,
-				"intro.cmp.txt",   "intro.ogg",   0,
-				"logos.cmp.txt",   "logo.ogg",    0,
-				"taxi.cmp.txt",    "taxi.ogg",    0,
-				"voyage.cmp.txt",  "voyage.ogg",  0
+				{ data : "debut.cmp.txt",   music : "debut.ogg",   offset : 2 },
+				{ data : "espions.cmp.txt", muisc : "reunion.ogg", offset : 2 },
+				{ data : "intro.cmp.txt",   music : "intro.ogg",   offset : 2 },
+				{ data : "logos.cmp.txt",   music : "logo.ogg",    offset : 2 },
+				{ data : "taxi.cmp.txt",    music : "taxi.ogg",    offset : 2 },
+				{ data : "voyage.cmp.txt",  music : "voyage.ogg",  offset : 2 }
 			];
-			var NUM = 6;
+			var NUM = 2;
 
 			player.init( "screen" );
 
@@ -34,12 +34,12 @@
 			xhr.onreadystatechange = function() {
 				if ( xhr.readyState == 4 && xhr.status == 200 ) {
 					player.decode( atob( xhr.responseText ) );
-					player.start( );
-					music.src = "music/" + CUTSCENES[ NUM + 1 ];
+					player.start( CUTSCENES[ NUM ].offset );
+					music.src = "music/" + CUTSCENES[ NUM ].music;
 					music.play( );
 				}
 			}
-			xhr.open("GET", "cine/" + CUTSCENES[ NUM + 0 ], true);
+			xhr.open("GET", "cine/" + CUTSCENES[ NUM ].data, true);
 			xhr.send();
 
 			function onPlay() {

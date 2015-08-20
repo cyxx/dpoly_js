@@ -1,4 +1,6 @@
 var player = {
+	m_startPos : 0,
+	m_pos : 0,
 	m_playing : false,
 	m_yield : 0,
 	m_clear : false,
@@ -13,8 +15,8 @@ var player = {
 		this.m_canvas = document.getElementById( canvas );
 	},
 
-	start : function( ) {
-		this.m_pos = 2;
+	start : function( pos ) {
+		this.m_pos = this.m_startPos = pos;
 		this.m_playing = true;
 		this.setDefaultPalette( );
 		this.m_timer = setInterval( function( ) { player.doTick( ) }, 15 );
@@ -66,8 +68,12 @@ var player = {
 			var opcode = this.readNextByte( );
 //			window.console.log('opcode=' + opcode + ' pos=' + this.m_pos);
 			if (opcode & 0x80) {
-				this.m_pos = 2;
-				this.setDefaultPalette( );
+				if ( 1 ) { // loop
+					this.m_pos = this.m_startPos;
+					this.setDefaultPalette( );
+				} else {
+					this.m_playing = false;
+				}
 				continue;
 			}
 			this.m_opcode = opcode >> 2;
@@ -147,6 +153,7 @@ var player = {
 				this.m_yield = 10;
 				break;
 			default:
+				console.log( "Invalid opcode=" + opcode );
 				this.m_playing = false;
 				break;
 			}
