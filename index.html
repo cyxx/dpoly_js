@@ -7,7 +7,15 @@
 		<h1>Flashback: the Quest for Identity - DPoly.js</h1>
 		<div style="width: 480px;">
 			<canvas id="screen" width="480" height="256"></canvas>
-			<div align="left">
+			<div align="right">
+				<select onclick="onSelect()" id="nameSelect">
+					<option>debut</option>
+					<option>espions</option>
+					<option selected>intro</option>
+					<option>logos</option>
+					<option>taxi</option>
+					<option>voyage</option>
+				</select>
 				<input type="button" value="Play" onclick="onPlay()" id="playButton" />
 			</div>
 		</div>
@@ -26,25 +34,33 @@
 				{ data : "taxi.cmp.txt",    music : "taxi.ogg",    offset : 2 },
 				{ data : "voyage.cmp.txt",  music : "voyage.ogg",  offset : 2 }
 			];
-			var NUM = 2;
+			var cutscene = 2;
 
 			player.init( "screen" );
+			playCutscene( );
 
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function() {
-				if ( xhr.readyState == 4 && xhr.status == 200 ) {
-					player.decode( atob( xhr.responseText ) );
-					player.start( CUTSCENES[ NUM ].offset );
-					music.src = "music/" + CUTSCENES[ NUM ].music;
-					music.play( );
+			function playCutscene( ) {
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if ( xhr.readyState == 4 && xhr.status == 200 ) {
+						player.decode( atob( xhr.responseText ) );
+						player.start( CUTSCENES[ cutscene ].offset );
+						music.src = "music/" + CUTSCENES[ cutscene ].music;
+						music.play( );
+					}
 				}
+				xhr.open("GET", "cine/" + CUTSCENES[ cutscene ].data, true);
+				xhr.send();
 			}
-			xhr.open("GET", "cine/" + CUTSCENES[ NUM ].data, true);
-			xhr.send();
+
+			function onSelect( ) {
+				cutscene = nameSelect.selectedIndex;
+				playCutscene(  );
+			}
 
 			function onPlay() {
-				player.start( CUTSCENES[ NUM ].offset );
-				music.src = "music/" + CUTSCENES[ NUM ].music;
+				player.start( CUTSCENES[ cutscene ].offset );
+				music.src = "music/" + CUTSCENES[ cutscene ].music;
 				music.play( );
 			}
 		</script>
