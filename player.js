@@ -101,6 +101,14 @@ var player = {
 				var dst = this.readNextByte( );
 				this.setPalette( src, dst );
 				break;
+			case 6:
+				var id = this.readNextWord( );
+				break;
+			case 7:
+				break;
+			case 8:
+				this.m_pos += 3;
+				break;
 			case 10:
 				var shape = this.readNextWord( );
 				var x = 0;
@@ -146,6 +154,13 @@ var player = {
 				break;
 			case 12:
 				this.m_yield = 10;
+				break;
+			case 13:
+				var id = this.readNextWord( );
+				if (id != 0xFFFF) {
+					var x = this.readNextByte( );
+					var y = this.readNextByte( );
+				}
 				break;
 			default:
 				console.log( "Invalid opcode=" + opcode );
