@@ -1,5 +1,5 @@
 
-all: convert_music encode_data
+all: convert_music dpoly.min.js encode_data
 
 dpoly.min.js: decode.js player.js
 	cat $^ > dpoly.js
@@ -10,7 +10,3 @@ convert_music: convert_music.o
 
 encode_data: encode_data.o
 	$(CXX) -o $@ $^
-
-data.js: encode_data
-	./encode_data intro.cmd >  data.js
-	./encode_data intro.pol >> data.js
