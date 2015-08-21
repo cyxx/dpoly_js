@@ -12,7 +12,7 @@
 					<option>chute</option>
 					<option>debut</option>
 					<option>espions</option>
-					<option selected>intro</option>
+					<option>intro</option>
 					<option>logos</option>
 					<option>memo</option>
 					<option>taxi</option>
@@ -25,16 +25,18 @@
 		<script type="text/javascript" src="dpoly.min.js"></script>
 		<script type="text/javascript">
 			var CUTSCENES = [
-				{ data : "chute.cmp.txt",   music : "chute.ogg",   offset : 2 },
-				{ data : "debut.cmp.txt",   music : "debut.ogg",   offset : 2 },
-				{ data : "espions.cmp.txt", muisc : "reunion.ogg", offset : 2 },
-				{ data : "intro.cmp.txt",   music : "intro.ogg",   offset : 2 },
-				{ data : "logos.cmp.txt",   music : "logo.ogg",    offset : 2 },
-				{ data : "memo.cmp.txt",    music : "memoire.ogg", offset : 2 },
-				{ data : "taxi.cmp.txt",    music : "taxi.ogg",    offset : 2 },
-				{ data : "voyage.cmp.txt",  music : "voyage.ogg",  offset : 2 }
+				{ data : "chute.cmp.txt",   music : "chute.ogg",   offset : 6 },
+				{ data : "debut.cmp.txt",   music : "debut.ogg",   offset : 0 },
+				{ data : "espions.cmp.txt", muisc : "reunion.ogg", offset : 0 },
+				{ data : "intro.cmp.txt",   music : "intro.ogg",   offset : 0 },
+				{ data : "logos.cmp.txt",   music : "logo.ogg",    offset : 0 },
+				{ data : "memo.cmp.txt",    music : "memoire.ogg", offset : 0 },
+				{ data : "taxi.cmp.txt",    music : "taxi.ogg",    offset : 0 },
+				{ data : "voyage.cmp.txt",  music : "voyage.ogg",  offset : 0 }
 			];
-			var cutscene = 2;
+			var cutscene = 4;
+
+			nameSelect.selectedIndex = cutscene;
 
 			player.init( "screen" );
 			playCutscene( );

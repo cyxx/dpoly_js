@@ -17,13 +17,22 @@ var player = {
 	},
 
 	start : function( pos ) {
-		this.m_pos = this.m_startPos = pos;
+		this.m_pos = this.m_startPos = this.readOffset( pos );
 		this.m_playing = true;
 		this.setDefaultPalette( );
 	},
 
 	pause : function( ) {
 		this.m_playing = !this.m_playing;
+	},
+
+	readOffset : function( pos ) {
+		if ( pos != 0 ) {
+			pos = this.readWord( this.m_cmd, ( pos + 1 ) * 2 );
+		}
+		var offset = ( this.readWord( this.m_cmd, 0 ) + 1 ) * 2;
+		console.log( "startOffset offset=" + offset + " pos=" + pos );
+		return offset + pos;
 	},
 
 	readByte : function( buf, pos ) {
