@@ -227,10 +227,12 @@ var player = {
 	},
 
 	drawShapeScale : function( num, x, y, z, ix, iy ) {
+		console.log( "Unimplemented drawShapeScale( )" );
 		// TODO:
 	},
 
 	drawShapeScaleRotate : function( num, x, y, z, ix, iy, r1, r2, r3 ) {
+		console.log( "Unimplemented drawShapeScaleRotate( )" );
 		// TODO:
 	},
 
