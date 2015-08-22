@@ -11,6 +11,7 @@
 				<select onclick="onSelect()" id="nameSelect">
 					<option>chute</option>
 					<option>debut</option>
+					<option>desinteg</option>
 					<option>espions</option>
 					<option>holocube</option>
 					<option>intro</option>
@@ -26,17 +27,18 @@
 		<script type="text/javascript" src="dpoly.min.js"></script>
 		<script type="text/javascript">
 			var CUTSCENES = [
-				{ data : "chute.cmp.txt",   music : "chute.ogg",    offset : 1 },
-				{ data : "debut.cmp.txt",   music : "debut.ogg",    offset : 0 },
-				{ data : "espions.cmp.txt", music : "reunion.ogg",  offset : 0 },
-				{ data : "holoseq.cmp.txt", music : "holocube.ogg", offset : 0 },
-				{ data : "intro.cmp.txt",   music : "intro.ogg",    offset : 0 },
-				{ data : "logos.cmp.txt",   music : "logo.ogg",     offset : 0 },
-				{ data : "memo.cmp.txt",    music : "memoire.ogg",  offset : 0 },
-				{ data : "taxi.cmp.txt",    music : "taxi.ogg",     offset : 0 },
-				{ data : "voyage.cmp.txt",  music : "voyage.ogg",   offset : 0 }
+				{ data : "chute.cmp.txt",    music : "chute.ogg",    offset : 1 },
+				{ data : "debut.cmp.txt",    music : "debut.ogg",    offset : 0 },
+				{ data : "desinteg.cmp.txt", music : "desinteg.ogg", offset : 0 },
+				{ data : "espions.cmp.txt",  music : "reunion.ogg",  offset : 0 },
+				{ data : "holoseq.cmp.txt",  music : "memoire.ogg",  offset : 0 },
+				{ data : "intro.cmp.txt",    music : "intro.ogg",    offset : 0 },
+				{ data : "logos.cmp.txt",    music : "logo.ogg",     offset : 0 },
+				{ data : "memo.cmp.txt",     music : "memoire.ogg",  offset : 0 },
+				{ data : "taxi.cmp.txt",     music : "taxi.ogg",     offset : 0 },
+				{ data : "voyage.cmp.txt",   music : "voyage.ogg",   offset : 0 }
 			];
-			var cutscene = 4;
+			var cutscene = 5;
 
 			nameSelect.selectedIndex = cutscene;
 
