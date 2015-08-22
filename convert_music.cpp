@@ -94,7 +94,7 @@ static void convertAmigaModDir(const char *dir) {
 int main(int argc, char *argv[]) {
 	if (argc == 2) {
 		struct stat st;
-		if (stat(optarg, &st) != 0 || !S_ISDIR(st.st_mode)) {
+		if (stat(argv[1], &st) != 0 || !S_ISDIR(st.st_mode)) {
 			fprintf(stderr, "'%s' is not a directory\n", argv[1]);
 		} else {
 			convertAmigaModDir(argv[1]);
