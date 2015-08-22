@@ -127,7 +127,7 @@ var player = {
 					x = this.toSignedWord( this.readNextWord( ) );
 					y = this.toSignedWord( this.readNextWord( ) );
 				}
-				var z = 512 + this.readNextWord( );
+				var z = 512 + this.toSignedWord( this.readNextWord( ) );
 				var ix = this.readNextByte( );
 				var iy = this.readNextByte( );
 				this.drawShapeScale( shape, x, y, z, ix, iy );
@@ -144,7 +144,7 @@ var player = {
 				var z = 512;
 				if (shape & 0x4000) {
 					shape = shape & 0x3FFF;
-					z += this.readNextWord( );
+					z += this.toSignedWord( this.readNextWord( ) );
 				}
 				var ix = this.readNextByte( );
 				var iy = this.readNextByte( );
@@ -184,8 +184,8 @@ var player = {
 		context.fillStyle = '#000';
 		context.fillRect( 0, 0, this.m_canvas.width, this.m_canvas.height );
 		for (var i = 0; i < this.m_primitives.length; i++) {
-			var primitive = this.m_primitives[i];
-			this.drawPrimitive( primitive.x, primitive.y, primitive.num, primitive.color, false );
+			var p = this.m_primitives[i];
+			this.drawPrimitive( p.x, p.y, p.dx, p.dy, p.num, p.color, false, p.transform );
 		}
 		this.flipScreen();
 		this.m_yield = 5;
@@ -197,7 +197,7 @@ var player = {
 		}
 	},
 
-	drawShape : function( num, x, y ) {
+	drawShape : function( num, x, y, t ) {
 		var offset = this.readWord( this.m_pol, 2 );
 		var shapeOffset = this.readWord( this.m_pol, offset + num * 2 );
 
@@ -228,7 +228,7 @@ var player = {
 				color += 16;
 			}
 
-			this.queuePrimitive( x + dx, y + dy, verticesOffset & 0x3FFF, color, alpha );
+			this.queuePrimitive( x, y, dx, dy, verticesOffset & 0x3FFF, color, alpha, t );
 		}
 		if (this.m_clear != 0) {
 			this.savePrimitives( );
@@ -236,8 +236,7 @@ var player = {
 	},
 
 	drawShapeScale : function( num, x, y, z, ix, iy ) {
-		console.log( "Unimplemented drawShapeScale( )" );
-		// TODO:
+		this.drawShape( num, x, y, { z : z, ix : ix, iy : iy } );
 	},
 
 	drawShapeScaleRotate : function( num, x, y, z, ix, iy, r1, r2, r3 ) {
@@ -281,8 +280,8 @@ var player = {
 		}
 	},
 
-	queuePrimitive : function( x, y, num, color, alpha ) {
-		var primitive = { x : x, y : y, num : num, color : color };
+	queuePrimitive : function( x, y, dx, dy, num, color, alpha, t ) {
+		var primitive = { x : x, y : y, dx : dx, dy : dy, num : num, color : color, transform : t };
 		this.m_primitives.push( primitive );
 	},
 
@@ -298,7 +297,7 @@ var player = {
 		this.m_savedPrimitives = this.m_primitives.slice();
 	},
 
-	drawPrimitive : function( x, y, num, color, alpha ) {
+	drawPrimitive : function( x, y, dx, dy, num, color, alpha, t ) {
 		var offset = this.readWord( this.m_pol, 10 );
 		var verticesOffset = this.readWord( this.m_pol, offset + num * 2 );
 
@@ -308,17 +307,27 @@ var player = {
 		var count = this.readByte( this.m_pol, offset );
 		offset++;
 
-		x += this.toSignedWord( this.readWord( this.m_pol, offset ) );
-		offset += 2;
-		y += this.toSignedWord( this.readWord( this.m_pol, offset ) );
-		offset += 2;
-
-		var scale = this.m_scale;
+		var pixelSize = this.m_scale;
 
 		var context = this.m_canvas.getContext( '2d' );
 		context.fillStyle = context.strokeStyle = this.m_palette[ color ];
 		context.save( );
-		context.scale( scale, scale );
+		context.scale( pixelSize, pixelSize );
+
+		var xpos = this.toSignedWord( this.readWord( this.m_pol, offset ) );
+		offset += 2;
+		var ypos = this.toSignedWord( this.readWord( this.m_pol, offset ) );
+		offset += 2;
+
+		if ( t ) {
+			context.translate( t.ix, t.iy );
+			context.scale( t.z / 512, t.z / 512 );
+			xpos -= t.ix;
+			ypos -= t.iy;
+		}
+		x += xpos + dx;
+		y += ypos + dy;
+
 		if (count & 0x80) {
 			context.translate( x, y );
 			var rx = this.toSignedWord( this.readWord( this.m_pol, offset ) );
@@ -331,7 +340,7 @@ var player = {
 			context.closePath( );
 			context.fill( );
 		} else if (count == 0) {
-			context.fillRect( x, y, scale, scale );
+			context.fillRect( x, y, pixelSize, pixelSize );
 		} else {
 			context.beginPath( );
 			context.moveTo( x, y );
