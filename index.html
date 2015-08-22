@@ -1,29 +1,50 @@
 <html>
 	<head>
 		<title>Flashback: the Quest for Identity - DPoly.js</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	</head>
-	<body>
+	<body style="margin: 0px auto; text-align: center; padding: 0px 0px; width: 780px; background: #e5e5e5;">
+		<div align="center" style="background-color: #fff; padding-top: 10px; width: 780px; text-align: center;">
+		<h1>Flashback: the Quest for Identity</h1>
 		<div align="center">
-		<h2>Flashback: the Quest for Identity - DPoly.js</h2>
-		<div style="width: 480px;">
-			<canvas id="screen" width="480" height="256"></canvas>
-			<div align="right">
-				<select onclick="onSelect()" id="nameSelect">
-					<option>chute</option>
-					<option>debut</option>
-					<option>desinteg</option>
-					<option>espions</option>
-					<option>holocube</option>
-					<option>intro</option>
-					<option>logos</option>
-					<option>memo</option>
-					<option>taxi</option>
-					<option>voyage</option>
-				</select>
-				<input type="button" value="Play" onclick="onPlay()" id="playButton" />
+			<div style="font-family: Arial; font-size: 14px; width: 600px; text-align: left;">
+			<p>
+				This page allows to playback some cutscenes from the game Flashback made by Delphine Software.
+			</p>
+			<p>
+				The code is based on the engine rewrite <a href="http://cyxdown.free.fr/reminiscence">REminiscence</a>.
+				The original game code (in 1992) used to render polygons via a pure 68000 software routine. MOD tracker
+				based files were driving the music. The cutscenes on this page are now played via the &lt;canvas/&gt;
+				and &lt;audio/&gt; HTML5 tags.
+			</p>
+			<p>
+				There are some obvious glitches due to the low resolution (240x128) the cutscenes were originally
+				designed for. Consider this page as a pure experiment, made for fun and nostalgia !
+			</p>
+			</div>
+			<div align="center" style="width: 480px;">
+				<audio id="music"></audio>
+				<canvas id="screen" width="480" height="256"></canvas>
+				<div align="right">
+					<select onclick="onSelect()" id="nameSelect">
+						<option>chute</option>
+						<option>debut</option>
+						<option>desinteg</option>
+						<option>espions</option>
+						<option>holocube</option>
+						<option>intro</option>
+						<option>logos</option>
+						<option>memo</option>
+						<option>taxi</option>
+						<option>voyage</option>
+					</select>
+					<input type="button" value="Play" onclick="onPlay()" id="playButton" />
+				</div>
 			</div>
 		</div>
-		<audio id="music"></audio>
+                <div style="background-color: #eeeeee; margin: 20px 0px 0px 0px; padding: 8px;">
+                        <strong>dpoly.js</strong> code is available on <a href="http://github.com/cyxx/dpoly_js">github.com</a>.
+                </div>
 		<script type="text/javascript" src="dpoly.min.js"></script>
 		<script type="text/javascript">
 			var CUTSCENES = [
