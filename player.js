@@ -240,8 +240,7 @@ var player = {
 	},
 
 	drawShapeScaleRotate : function( num, x, y, z, ix, iy, r1, r2, r3 ) {
-		console.log( "Unimplemented drawShapeScaleRotate( )" );
-		// TODO:
+		this.drawShape( num, x, y, { z : z, ix : ix, iy : iy, r1 : r1, r2 : r2, r3 : r3 } );
 	},
 
 	setDefaultPalette : function( ) {
@@ -324,6 +323,7 @@ var player = {
 			context.scale( t.z / 512, t.z / 512 );
 			xpos -= t.ix;
 			ypos -= t.iy;
+			// TODO: r1, r2, r3
 		}
 		x += xpos + dx;
 		y += ypos + dy;
