@@ -10,3 +10,6 @@ convert_music: convert_music.o
 
 encode_data: encode_data.o
 	$(CXX) -o $@ $^
+
+clean:
+	rm -f *.o dpoly.js dpoly.min.js convert_music encode_data
