@@ -10,6 +10,7 @@ var player = {
 	m_opcode : 255,
 	m_primitives : new Array( ),
 	m_savedPrimitives : new Array( ),
+	m_fixUpPalette : 0,
 
 	init : function( canvas ) {
 		this.m_canvas = document.getElementById( canvas );
@@ -31,7 +32,6 @@ var player = {
 			pos = this.readWord( this.m_cmd, ( pos + 1 ) * 2 );
 		}
 		var offset = ( this.readWord( this.m_cmd, 0 ) + 1 ) * 2;
-		console.log( "startOffset offset=" + offset + " pos=" + pos );
 		return offset + pos;
 	},
 
@@ -75,7 +75,7 @@ var player = {
 		}
 		while ( this.m_yield == 0 ) {
 			var opcode = this.readNextByte( );
-//			window.console.log('opcode=' + opcode + ' pos=' + this.m_pos);
+//			console.log('opcode=' + opcode + ' pos=' + this.m_pos);
 			if (opcode & 0x80) {
 				this.m_playing = false;
 				break;
@@ -248,6 +248,16 @@ var player = {
 			var color = '#' + i.toString( 16 ) + i.toString( 16 ) + i.toString( 16 );
 			this.m_palette[ 16 + i ] = this.m_palette[ i ] = color;
 		}
+		this.m_fixUpPalette = 0;
+	},
+
+	setTaxiPalette : function( ) {
+		// colors from PC DOS version
+		var colors = [ '000', 'fff', '000', '886', '664', '444', 'aa8', '684', 'ec0', 'ea0', 'c60', 'a40', '620', '66c', '44a', 'e86' ];
+		for ( var i = 0; i < 16; ++i ) {
+			this.m_palette[ 16 + i ] = '#' + colors[ i ];
+		}
+		this.m_fixUpPalette = 1;
 	},
 
 	setPalette : function( src, dst ) {
@@ -256,6 +266,9 @@ var player = {
 
 		var palOffset = 0;
 		if ( dst == 0 ) {
+			if ( this.m_fixUpPalette != 0 ) {
+				return;
+			}
 			palOffset = 16;
 		}
 
@@ -354,7 +367,7 @@ var player = {
 				context.lineTo( x, y );
 			}
 			context.closePath( );
-			if (count <= 2) {
+			if (count < 2) {
 				context.stroke( );
 			} else {
 				context.fill( );
