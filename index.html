@@ -68,9 +68,9 @@
 			nameSelect.selectedIndex = cutscene;
 
 			player.init( "screen" );
-			playCutscene( );
+			fetchCutscene( );
 
-			function playCutscene( ) {
+			function fetchCutscene( ) {
 				music.pause( );
 				disablePlayButton( true );
 				var xhr = new XMLHttpRequest();
@@ -78,15 +78,7 @@
 					if ( xhr.readyState == 4 && xhr.status == 200 ) {
 						disablePlayButton( false );
 						player.decode( atob( xhr.responseText ) );
-						player.start( CUTSCENES[ cutscene ].offset );
-						if ( CUTSCENES[ cutscene ].data == "taxi.cmp.txt" ) {
-							// Amiga uses a buggy (blue-ish) palette, fixed with DOS data file
-							player.setTaxiPalette( );
-						}
-						if ( CUTSCENES[ cutscene ].music ) {
-							music.src = "music/" + CUTSCENES[ cutscene ].music;
-							music.play( );
-						}
+						playCutscene( );
 					}
 				}
 				xhr.open("GET", "cine/" + CUTSCENES[ cutscene ].data, true);
@@ -102,10 +94,17 @@
 			}
 			function onCutsceneChange( ) {
 				cutscene = nameSelect.selectedIndex;
-				playCutscene( );
+				fetchCutscene( );
 			}
 			function onPlayButtonPressed() {
+				playCutscene( );
+			}
+			function playCutscene( ) {
 				player.start( CUTSCENES[ cutscene ].offset );
+				if ( CUTSCENES[ cutscene ].data == "taxi.cmp.txt" ) {
+					// Amiga uses a buggy (blue-ish) palette, fixed with DOS data file
+					player.setTaxiPalette( );
+				}
 				if ( CUTSCENES[ cutscene ].music ) {
 					music.src = "music/" + CUTSCENES[ cutscene ].music;
 					music.play( );
