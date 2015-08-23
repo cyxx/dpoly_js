@@ -35,7 +35,9 @@
 						<option>intro</option>
 						<option>logos</option>
 						<option>memo</option>
+						<option>pont</option>
 						<option>taxi</option>
+						<option>teleport</option>
 						<option>voyage</option>
 					</select>
 					<input type="button" value="Play" onclick="onPlayButtonPressed()" id="playButton" />
@@ -56,26 +58,35 @@
 				{ data : "intro.cmp.txt",    music : "intro.ogg",    offset : 0 },
 				{ data : "logos.cmp.txt",    music : "logo.ogg",     offset : 0 },
 				{ data : "memo.cmp.txt",     music : "memoire.ogg",  offset : 0 },
+				{ data : "pont.cmp.txt",     music : null,           offset : 0 },
 				{ data : "taxi.cmp.txt",     music : "taxi.ogg",     offset : 0 },
+				{ data : "teleport.cmp.txt", music : null,           offset : 0 },
 				{ data : "voyage.cmp.txt",   music : "voyage.ogg",   offset : 0 }
 			];
 			var cutscene = 5;
 
 			nameSelect.selectedIndex = cutscene;
-			disablePlayButton( true );
 
 			player.init( "screen" );
 			playCutscene( );
 
 			function playCutscene( ) {
+				music.pause( );
+				disablePlayButton( true );
 				var xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = function() {
 					if ( xhr.readyState == 4 && xhr.status == 200 ) {
 						disablePlayButton( false );
 						player.decode( atob( xhr.responseText ) );
 						player.start( CUTSCENES[ cutscene ].offset );
-						music.src = "music/" + CUTSCENES[ cutscene ].music;
-						music.play( );
+						if ( CUTSCENES[ cutscene ].data == "taxi.cmp.txt" ) {
+							// Amiga uses a buggy (blue-ish) palette, fixed with DOS data file
+							player.setTaxiPalette( );
+						}
+						if ( CUTSCENES[ cutscene ].music ) {
+							music.src = "music/" + CUTSCENES[ cutscene ].music;
+							music.play( );
+						}
 					}
 				}
 				xhr.open("GET", "cine/" + CUTSCENES[ cutscene ].data, true);
@@ -95,8 +106,10 @@
 			}
 			function onPlayButtonPressed() {
 				player.start( CUTSCENES[ cutscene ].offset );
-				music.src = "music/" + CUTSCENES[ cutscene ].music;
-				music.play( );
+				if ( CUTSCENES[ cutscene ].music ) {
+					music.src = "music/" + CUTSCENES[ cutscene ].music;
+					music.play( );
+				}
 			}
 		</script>
 		</div>
