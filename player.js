@@ -3,8 +3,7 @@ var player = {
 	m_pos : 0,
 	m_playing : false,
 	m_yield : 0,
-	m_clear : false,
-	m_buf : null,
+	m_clear : 0,
 	m_palette : new Array( 32 ),
 	m_scale : 2,
 	m_opcode : 255,
@@ -185,7 +184,9 @@ var player = {
 		context.fillRect( 0, 0, this.m_canvas.width, this.m_canvas.height );
 		for (var i = 0; i < this.m_primitives.length; i++) {
 			var p = this.m_primitives[i];
-			this.drawPrimitive( p.x, p.y, p.dx, p.dy, p.num, p.color, false, p.transform );
+			context.globalAlpha = p.alpha ? .8 : 1.;
+			this.drawPrimitive( context, p.x, p.y, p.dx, p.dy, p.num, p.color, p.transform );
+			context.globalAlpha = 1.;
 		}
 		this.flipScreen();
 		this.m_yield = 5;
@@ -293,7 +294,7 @@ var player = {
 	},
 
 	queuePrimitive : function( x, y, dx, dy, num, color, alpha, t ) {
-		var primitive = { x : x, y : y, dx : dx, dy : dy, num : num, color : color, transform : t };
+		var primitive = { x : x, y : y, dx : dx, dy : dy, num : num, color : color, alpha : alpha, transform : t };
 		this.m_primitives.push( primitive );
 	},
 
@@ -309,7 +310,7 @@ var player = {
 		this.m_savedPrimitives = this.m_primitives.slice();
 	},
 
-	drawPrimitive : function( x, y, dx, dy, num, color, alpha, t ) {
+	drawPrimitive : function( context, x, y, dx, dy, num, color, t ) {
 		var offset = this.readWord( this.m_pol, 10 );
 		var verticesOffset = this.readWord( this.m_pol, offset + num * 2 );
 
@@ -321,7 +322,6 @@ var player = {
 
 		var pixelSize = this.m_scale;
 
-		var context = this.m_canvas.getContext( '2d' );
 		context.fillStyle = context.strokeStyle = this.m_palette[ color ];
 		context.save( );
 		context.scale( pixelSize, pixelSize );
