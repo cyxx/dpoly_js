@@ -1,5 +1,5 @@
 
-all: convert_music dpoly.min.js encode_data
+all: convert_music dpoly.min.js
 
 dpoly.min.js: decode.js player.js
 	cat $^ > dpoly.js
@@ -8,8 +8,5 @@ dpoly.min.js: decode.js player.js
 convert_music: convert_music.o
 	$(CXX) -o $@ $^ -lmodplug
 
-encode_data: encode_data.o
-	$(CXX) -o $@ $^
-
 clean:
-	rm -f *.o dpoly.js dpoly.min.js convert_music encode_data
+	rm -f *.o dpoly.js dpoly.min.js convert_music
