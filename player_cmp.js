@@ -1,12 +1,10 @@
 var player_cmp = {
-	m_startPos : 0,
 	m_pos : 0,
 	m_playing : false,
 	m_yield : 0,
 	m_clear : 0,
 	m_palette : new Array( 32 ),
 	m_scale : 2,
-	m_opcode : 255,
 	m_primitives : new Array( ),
 	m_savedPrimitives : new Array( ),
 	m_fixUpPalette : 0,
@@ -16,7 +14,7 @@ var player_cmp = {
 	},
 
 	start : function( pos ) {
-		this.m_pos = this.m_startPos = this.readOffset( pos );
+		this.m_pos = this.readOffset( pos );
 		this.m_playing = true;
 		this.setDefaultPalette( );
 		this.m_timer = setInterval( function( ) { player_cmp.doTick( ) }, 15 );
@@ -83,8 +81,7 @@ var player_cmp = {
 				this.m_playing = false;
 				break;
 			}
-			this.m_opcode = opcode >> 2;
-			switch (this.m_opcode) {
+			switch ( opcode >> 2 ) {
 			case 0:
 			case 5:
 			case 9:
