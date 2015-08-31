@@ -27,12 +27,14 @@
 				<canvas id="screen" width="480" height="256"></canvas>
 				<div align="right">
 					<select onchange="onCutsceneChange()" id="nameSelect">
+						<option>caillou</option>
 						<option>chute</option>
 						<option>debut</option>
 						<option>desinteg</option>
 						<option>espions</option>
 						<option>holocube</option>
 						<option>intro</option>
+						<option>jupiter</option>
 						<option>logos</option>
 						<option>memo</option>
 						<option>pont</option>
@@ -50,34 +52,42 @@
 		<script type="text/javascript" src="dpoly.min.js"></script>
 		<script type="text/javascript">
 			var CUTSCENES = [
-				{ data : "chute.cmp.txt",    music : "ceinture.ogg", offset : 1 },
-				{ data : "debut.cmp.txt",    music : "debut.ogg",    offset : 0 },
-				{ data : "desinteg.cmp.txt", music : "desinteg.ogg", offset : 0 },
-				{ data : "espions.cmp.txt",  music : "reunion.ogg",  offset : 0 },
-				{ data : "holoseq.cmp.txt",  music : "holocube.ogg", offset : 0 },
-				{ data : "intro.cmp.txt",    music : "intro.ogg",    offset : 0 },
-				{ data : "logos.cmp.txt",    music : "logo.ogg",     offset : 0 },
-				{ data : "memo.cmp.txt",     music : "memoire.ogg",  offset : 0 },
-				{ data : "pont.cmp.txt",     music : null,           offset : 0 },
-				{ data : "taxi.cmp.txt",     music : "taxi.ogg",     offset : 0 },
-				{ data : "teleport.cmp.txt", music : null,           offset : 0 },
-				{ data : "voyage.cmp.txt",   music : "voyage.ogg",   offset : 0 }
+				{ data : "caillou.set.txt",  music : null,           offset : 0x5E4,  player : player_set },
+				{ data : "chute.cmp.txt",    music : "ceinture.ogg", offset : 1,      player : player_cmp },
+				{ data : "debut.cmp.txt",    music : "debut.ogg",    offset : 0,      player : player_cmp },
+				{ data : "desinteg.cmp.txt", music : "desinteg.ogg", offset : 0,      player : player_cmp },
+				{ data : "espions.cmp.txt",  music : "reunion.ogg",  offset : 0,      player : player_cmp },
+				{ data : "holoseq.cmp.txt",  music : "holocube.ogg", offset : 0,      player : player_cmp },
+				{ data : "intro.cmp.txt",    music : "intro.ogg",    offset : 0,      player : player_cmp },
+				{ data : "jupiter.set.txt",  music : null,           offset : 0x822A, player : player_set },
+				{ data : "logos.cmp.txt",    music : "logo.ogg",     offset : 0,      player : player_cmp },
+				{ data : "memo.cmp.txt",     music : "memoire.ogg",  offset : 0,      player : player_cmp },
+				{ data : "pont.cmp.txt",     music : null,           offset : 0,      player : player_cmp },
+				{ data : "taxi.cmp.txt",     music : "taxi.ogg",     offset : 0,      player : player_cmp },
+				{ data : "teleport.cmp.txt", music : null,           offset : 0,      player : player_cmp },
+				{ data : "voyage.cmp.txt",   music : "voyage.ogg",   offset : 0,      player : player_cmp }
 			];
-			var cutscene = 5;
+			var cutscene = 6;
+			var player = null;
 
 			nameSelect.selectedIndex = cutscene;
 
-			player.init( "screen" );
+			player_cmp.init( "screen" );
+			player_set.init( "screen" );
 			fetchCutscene( );
 
 			function fetchCutscene( ) {
 				music.pause( );
+				if ( player ) {
+					player.stop( );
+				}
+				player = CUTSCENES[ cutscene ].player;
 				disablePlayButton( true );
 				var xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = function() {
 					if ( xhr.readyState == 4 && xhr.status == 200 ) {
 						disablePlayButton( false );
-						player.decode( atob( xhr.responseText ) );
+						player.decode( atob( xhr.responseText ), CUTSCENES[ cutscene ].offset );
 						playCutscene( );
 					}
 				}
