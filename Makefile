@@ -1,7 +1,7 @@
 
 all: convert_music dpoly.min.js
 
-dpoly.min.js: decode.js player.js
+dpoly.min.js: decode.js player.js player_set.js
 	cat $^ > dpoly.js
 	java -jar compiler.jar --js dpoly.js --js_output_file $@
 

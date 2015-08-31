@@ -1,4 +1,4 @@
-var player = {
+var player_cmp = {
 	m_startPos : 0,
 	m_pos : 0,
 	m_playing : false,
@@ -13,17 +13,21 @@ var player = {
 
 	init : function( canvas ) {
 		this.m_canvas = document.getElementById( canvas );
-		this.m_timer = setInterval( function( ) { player.doTick( ) }, 15 );
 	},
 
 	start : function( pos ) {
 		this.m_pos = this.m_startPos = this.readOffset( pos );
 		this.m_playing = true;
 		this.setDefaultPalette( );
+		this.m_timer = setInterval( function( ) { player_cmp.doTick( ) }, 15 );
 	},
 
-	pause : function( ) {
-		this.m_playing = !this.m_playing;
+	stop : function( ) {
+		this.m_playing = false;
+		if ( this.m_timer ) {
+			clearInterval( this.m_timer );
+			this.m_timer = null;
+		}
 	},
 
 	readOffset : function( pos ) {
@@ -388,7 +392,7 @@ var player = {
 		return value;
 	},
 
-	decode : function( data ) {
+	decode : function( data, index ) {
 		var offset = 0;
 		var packedSize = this.readUint32BE( data, offset ); offset += 4;
 		console.log("POL size=" + packedSize );
