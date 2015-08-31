@@ -98,10 +98,6 @@ var player_set = {
 	},
 
 	drawNextFrame : function( ) {
-		var context = this.m_canvas.getContext( '2d' );
-		context.fillStyle = '#000';
-		context.fillRect( 0, 0, this.m_canvas.width, this.m_canvas.height );
-
 		var shape = this.readWord( this.m_set, this.m_pos ); this.m_pos += 2;
 		var count = this.readWord( this.m_set, this.m_pos ); this.m_pos += 2;
 		if ( count == 0 ) {
@@ -109,6 +105,9 @@ var player_set = {
 			return;
 		}
 
+		var context = this.m_canvas.getContext( '2d' );
+		context.fillStyle = '#000';
+		context.fillRect( 0, 0, this.m_canvas.width, this.m_canvas.height );
 		context.save( );
 		context.scale( this.m_scale, this.m_scale );
 
