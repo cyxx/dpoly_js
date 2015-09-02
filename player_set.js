@@ -66,15 +66,14 @@ var player_set = {
 			if ( verticesCount == 255 ) {
 				var rx = this.toSignedWord( this.readWord( this.m_set, offset ) ); offset += 2;
 				var ry = this.toSignedWord( this.readWord( this.m_set, offset ) ); offset += 2;
-				if ( rx < 0 || ry < 0 ) {
-					continue;
+				if ( rx > 0 && ry > 0 ) {
+					context.translate( ix + dx, iy + dy );
+					context.scale( rx, ry );
+					context.beginPath( );
+					context.arc( 0, 0, 1, 0, 2 * Math.PI, false );
+					context.closePath( );
+					context.fill( );
 				}
-				context.translate( ix + dx, iy + dy );
-				context.scale( rx, ry );
-				context.beginPath( );
-				context.arc( 0, 0, 1, 0, 2 * Math.PI, false );
-				context.closePath( );
-				context.fill( );
 			} else {
 				context.beginPath( );
 				for ( var j = 0; j < verticesCount; ++j ) {
