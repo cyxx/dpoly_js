@@ -401,8 +401,7 @@ var player_cmp = {
 		} else {
 			var size = this.readUint32BE( data, offset + packedSize - 4 );
 			var dat_pol = data.slice( offset, offset + packedSize );
-			var ret = decoder.decode( dat_pol );
-			this.m_pol = decoder.m_out;
+			this.m_pol = decoder.decode( dat_pol );
 		}
 		offset += packedSize;
 		packedSize = this.readUint32BE( data, offset ); offset += 4;
@@ -413,8 +412,7 @@ var player_cmp = {
 		} else {
 			var size = this.readUint32BE( data, offset + packedSize - 4 );
 			var dat_cmd = data.slice( offset, offset + packedSize );
-			var ret = decoder.decode( dat_cmd );
-			this.m_cmd = decoder.m_out;
+			this.m_cmd = decoder.decode( dat_cmd );
 		}
 	}
 }
