@@ -5,6 +5,8 @@ var player_set = {
 	m_backgroundShapeOffsets : null,
 	m_foregroundShapeOffsets : null,
 	m_palette : new Array( 16 ),
+	m_shapePoints : null,
+	m_rotationDataOffset : 0,
 
 	init : function( canvas ) {
 		this.m_canvas = document.getElementById( canvas );
@@ -14,6 +16,7 @@ var player_set = {
 		this.m_pos = 10;
 		var frames = this.readWord( this.m_set, this.m_pos ); this.m_pos += 2;
 		console.log( "frames=" + frames );
+		this.m_rotationPos = this.m_rotationDataOffset;
 		this.m_playing = true;
 		this.m_timer = setInterval( function( ) { player_set.doTick( ) }, 100 );
 	},
@@ -48,7 +51,7 @@ var player_set = {
 		}
 	},
 
-	drawShape : function( context, shapeOffset, dx, dy ) {
+	drawShape : function( context, shapeOffset ) {
 		this.readPalette( shapeOffset.offset + shapeOffset.size ) ;
 
 		var offset = shapeOffset.offset;
@@ -67,7 +70,7 @@ var player_set = {
 				var rx = this.toSignedWord( this.readWord( this.m_set, offset ) ); offset += 2;
 				var ry = this.toSignedWord( this.readWord( this.m_set, offset ) ); offset += 2;
 				if ( rx > 0 && ry > 0 ) {
-					context.translate( ix + dx, iy + dy );
+					context.translate( ix, iy );
 					context.scale( rx, ry );
 					context.beginPath( );
 					context.arc( 0, 0, 1, 0, 2 * Math.PI, false );
@@ -80,9 +83,9 @@ var player_set = {
 					var x = this.toSignedWord( this.readWord( this.m_set, offset ) ); offset += 2;
 					var y = this.toSignedWord( this.readWord( this.m_set, offset ) ); offset += 2;
 					if ( j == 0 ) {
-						context.moveTo( x + dx, y + dy );
+						context.moveTo( x, y );
 					} else {
-						context.lineTo( x + dx, y + dy );
+						context.lineTo( x, y );
 					}
 				}
 				context.closePath( );
@@ -98,11 +101,11 @@ var player_set = {
 
 	drawNextFrame : function( ) {
 		var shape = this.readWord( this.m_set, this.m_pos ); this.m_pos += 2;
-		var count = this.readWord( this.m_set, this.m_pos ); this.m_pos += 2;
-		if ( count == 0 ) {
+		if ( shape == 0xFFFF ) {
 			this.m_playing = false;
 			return;
 		}
+		var count = this.readWord( this.m_set, this.m_pos ); this.m_pos += 2;
 
 		var context = this.m_canvas.getContext( '2d' );
 		context.fillStyle = '#000';
@@ -115,7 +118,23 @@ var player_set = {
 			var shape = this.readWord( this.m_set, this.m_pos ); this.m_pos += 2;
 			var x = this.toSignedWord( this.readWord( this.m_set, this.m_pos ) ); this.m_pos += 2;
 			var y = this.toSignedWord( this.readWord( this.m_set, this.m_pos ) ); this.m_pos += 2;
-			this.drawShape( context, this.m_foregroundShapeOffsets[ shape ], x, y );
+			context.save( );
+			if ( this.m_rotationPos != 0 ) {
+				var r1 = this.readWord( this.m_set, this.m_rotationPos ); this.m_rotationPos += 2;
+				var r2 = this.readWord( this.m_set, this.m_rotationPos ); this.m_rotationPos += 2;
+				console.assert( r2 == 180 );
+				var r3 = this.readWord( this.m_set, this.m_rotationPos ); this.m_rotationPos += 2;
+				console.assert( r3 == 90 );
+				if ( r1 != 0 ) {
+					context.translate( x + this.m_shapePoints[ shape ].ox, y + this.m_shapePoints[ shape ].oy );
+					context.rotate( -r1 * Math.PI / 180 );
+					x = -this.m_shapePoints[ shape ].ox;
+					y = -this.m_shapePoints[ shape ].oy;
+				}
+			}
+			context.translate( x, y );
+			this.drawShape( context, this.m_foregroundShapeOffsets[ shape ] );
+			context.restore( );
 		}
 
 		context.restore( );
@@ -148,6 +167,11 @@ var player_set = {
 	},
 
 	decode : function( data, offset ) {
+		this.m_shapePoints = [ ];
+		this.m_rotationDataOffset = 0;
+		if ( offset == 0x822A ) {
+			this.readRotationData( data, 0x443A );
+		}
 		this.m_backgroundShapeOffsets = new Array( );
 		var bgCount = this.readWord( data, offset ); offset += 2;
 		console.log( "SET bg=" + bgCount );
@@ -165,5 +189,17 @@ var player_set = {
 			offset = nextOffset + 45; // amiga_colors
 		}
 		this.m_set = data;
+	},
+
+	readRotationData : function( data, offset ) {
+		offset += 2;
+		var count = this.readWord( data, offset ); offset += 2;
+		for ( var i = 0; i < count; ++i ) {
+			var ox = this.readWord( data, offset ); offset += 2;
+			var oy = this.readWord( data, offset ); offset += 2;
+			this.m_shapePoints.push( { ox : ox, oy : oy } );
+		}
+		offset += 2;
+		this.m_rotationDataOffset = offset;
 	}
 }
