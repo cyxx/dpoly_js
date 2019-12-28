@@ -107,6 +107,9 @@
 				fetchCutscene( );
 			}
 			function onPlayButtonPressed() {
+				if ( player ) {
+					player.stop( );
+				}
 				playCutscene( );
 			}
 			function playCutscene( ) {
