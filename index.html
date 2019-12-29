@@ -29,6 +29,9 @@
 					<select onchange="onLanguageChange()" id="languageSelect">
 						<option>English</option>
 						<option>French</option>
+						<option>German</option>
+						<option>Italian</option>
+						<option>Spanish</option>
 					</select>
 					<input type="checkbox" onclick="onClippingClick()" id="clippingCheckbox">240x128 (no clipping)</input>
 				</div>
@@ -141,7 +144,7 @@
 					player.setTaxiPalette( );
 				}
 				if ( CUTSCENES[ cutscene ].data == "espions.cmp.txt" ) {
-					player.fixEspionsBytecode( );
+					player.fixUpEspions( );
 				}
 				if ( CUTSCENES[ cutscene ].music ) {
 					music.src = "music/" + CUTSCENES[ cutscene ].music;
