@@ -338,15 +338,17 @@ var player_cmp = {
 		var ypos = this.toSignedWord( this.readWord( this.m_pol, offset ) );
 		offset += 2;
 
+		context.translate( x, y );
+		x = xpos + dx;
+		y = ypos + dy;
+
 		if ( t ) {
 			context.translate( t.ix, t.iy );
+			context.rotate( -t.r1 * Math.PI / 180. );
+			x -= t.ix;
+			y -= t.iy;
 			context.scale( t.z / 512, t.z / 512 );
-			xpos -= t.ix;
-			ypos -= t.iy;
-			// TODO: r1, r2, r3
 		}
-		x += xpos + dx;
-		y += ypos + dy;
 
 		if (count & 0x80) {
 			context.translate( x, y );
