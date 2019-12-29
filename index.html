@@ -26,6 +26,10 @@
 				<audio id="music"></audio>
 				<canvas id="screen" width="480" height="256"></canvas>
 				<div style="float: left;">
+					<select onchange="onLanguageChange()" id="languageSelect">
+						<option>English</option>
+						<option>French</option>
+					</select>
 					<input type="checkbox" onclick="onClippingClick()" id="clippingCheckbox">240x128 (no clipping)</input>
 				</div>
 				<div style="float: right;">
@@ -35,6 +39,7 @@
 						<option>debut</option>
 						<option>desinteg</option>
 						<option>espions</option>
+						<option>fin</option>
 						<option>gen</option>
 						<option>genexp</option>
 						<option>holocube</option>
@@ -56,6 +61,12 @@
                 <div style="background-color: #eeeeee; margin: 20px 0px 0px 0px; padding: 8px;">
                         <strong>dpoly.js</strong> code is available on <a href="http://github.com/cyxx/dpoly_js">github.com</a>.
                 </div>
+		<script>
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create','UA-100340326-5','auto');
+			ga('send','pageview');
+		</script>
+		<script async src='https://www.google-analytics.com/analytics.js'></script>
 		<script type="text/javascript" src="dpoly.min.js"></script>
 		<script type="text/javascript">
 			var CUTSCENES = [
@@ -64,6 +75,7 @@
 				{ data : "debut.cmp.txt",    music : "debut.ogg",    offset : 0,      player : player_cmp },
 				{ data : "desinteg.cmp.txt", music : "desinteg.ogg", offset : 0,      player : player_cmp },
 				{ data : "espions.cmp.txt",  music : "reunion.ogg",  offset : 0,      player : player_cmp },
+				{ data : "fin.cmp.txt",      music : null,           offset : 0,      player : player_cmp },
 				{ data : "gen.cmp.txt",      music : null,           offset : 0,      player : player_cmp },
 				{ data : "genexp.cmp.txt",   music : null,           offset : 0,      player : player_cmp },
 				{ data : "holoseq.cmp.txt",  music : "holocube.ogg", offset : 0,      player : player_cmp },
@@ -77,7 +89,7 @@
 				{ data : "teleport.cmp.txt", music : null,           offset : 0,      player : player_cmp },
 				{ data : "voyage.cmp.txt",   music : "voyage.ogg",   offset : 0,      player : player_cmp }
 			];
-			var cutscene = 8;
+			var cutscene = 9;
 			var player = null;
 
 			nameSelect.selectedIndex = cutscene;
@@ -128,10 +140,16 @@
 					// Amiga uses a buggy (blue-ish) palette, fixed with DOS data file
 					player.setTaxiPalette( );
 				}
+				if ( CUTSCENES[ cutscene ].data == "espions.cmp.txt" ) {
+					player.fixEspionsBytecode( );
+				}
 				if ( CUTSCENES[ cutscene ].music ) {
 					music.src = "music/" + CUTSCENES[ cutscene ].music;
 					music.play( );
 				}
+			}
+			function onLanguageChange( ) {
+				player_cmp.set_language( languageSelect.selectedIndex );
 			}
 			function onClippingClick( ) {
 				player_cmp.set_clipping( clippingCheckbox.checked );
