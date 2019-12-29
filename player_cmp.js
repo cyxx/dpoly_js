@@ -9,6 +9,7 @@ var player_cmp = {
 	m_savedPrimitives : new Array( ),
 	m_fixUpPalette : 0,
 	m_strings : strings_en,
+	m_captions : null,
 
 	init : function( canvas ) {
 		this.m_canvas = document.getElementById( canvas );
@@ -17,6 +18,7 @@ var player_cmp = {
 	start : function( pos ) {
 		this.m_pos = this.readOffset( pos );
 		this.m_playing = true;
+		this.m_captions = null;
 		this.setDefaultPalette( );
 		this.m_timer = setInterval( function( ) { player_cmp.doTick( ) }, 15 );
 	},
@@ -81,7 +83,7 @@ var player_cmp = {
 		}
 		while ( this.m_yield == 0 ) {
 			var opcode = this.readNextByte( );
-//			console.log('opcode=' + opcode + ' pos=' + this.m_pos);
+//			console.log('opcode:' + opcode + ' pos:' + this.m_pos);
 			if (opcode & 0x80) {
 				this.m_playing = false;
 				break;
@@ -118,10 +120,12 @@ var player_cmp = {
 				var id = this.readNextWord( );
 				if ( id != 0xFFFF ) {
 					if ( id in this.m_strings ) {
-						console.log( 'caption:' + this.m_strings[ id ] );
+						this.m_captions = this.m_strings[ id ];
 					} else {
 						console.log( "Invalid string:" + id );
 					}
+				} else {
+					this.m_captions = null;
 				}
 				break;
 			case 7:
@@ -196,7 +200,7 @@ var player_cmp = {
 				}
 				break;
 			default:
-				console.log( "Invalid opcode=" + opcode );
+				console.log( "Invalid opcode:" + opcode );
 				this.m_playing = false;
 				break;
 			}
@@ -205,19 +209,22 @@ var player_cmp = {
 
 	updateScreen : function( ) {
 		var context = this.m_canvas.getContext( '2d' );
-		context.fillStyle = '#000';
+		context.fillStyle = this.m_palette[ 0 ];
 		context.fillRect( 0, 0, this.m_canvas.width, this.m_canvas.height );
-		for (var i = 0; i < this.m_primitives.length; i++) {
+		for ( var i = 0; i < this.m_primitives.length; ++i ) {
 			var p = this.m_primitives[i];
 			if ( p.text ) {
-				this.drawText( context, p.text, p.x, p.y, p.color );
+				this.drawText( context, p.text, p.x, p.y, p.color, false );
 			} else {
 				context.globalAlpha = p.alpha ? .8 : 1.;
 				this.drawPrimitive( context, p.x, p.y, p.dx, p.dy, p.num, p.color, p.transform );
 				context.globalAlpha = 1.;
 			}
 		}
-		this.flipScreen();
+		if ( this.m_captions ) {
+			this.drawText( context, this.m_captions, 0, 120, 31, true );
+		}
+		this.flipScreen( );
 		this.m_yield = 5;
 	},
 
@@ -273,15 +280,22 @@ var player_cmp = {
 		this.drawShape( num, x, y, { z : z, ix : ix, iy : iy, r1 : r1, r2 : r2, r3 : r3 } );
 	},
 
-	drawText : function( context, str, x, y, color ) {
+	drawText : function( context, str, x, y, color, caption ) {
 		context.save( );
 		context.fillStyle = context.strokeStyle = this.m_palette[ color ];
-		var size = 8 * this.m_scale;
-		context.font = 'normal ' + size + 'px monospace';
 		var lines = str.split( '|' );
+		var size = 8 * this.m_scale;
+		x *= size;
+		y *= size;
+		if ( caption ) {
+			context.textAlign = 'center';
+			x = this.m_canvas.width / 2;
+			y = this.m_canvas.height - size * (lines.length + 1);
+		}
+		context.font = 'normal bold ' + size + 'px monospace';
 		for ( var i = 0; i < lines.length; ++i ) {
-			y += 1;
-			context.fillText( lines[ i ], x * size, y * size );
+			y += size;
+			context.fillText( lines[ i ], x, y );
 		}
 		context.restore( );
 	},
@@ -341,7 +355,7 @@ var player_cmp = {
 	},
 
 	clearPrimitives : function( ) {
-		this.m_primitives = [ ];
+		this.m_primitives.length = 0;
 	},
 
 	restorePrimitives : function( ) {
@@ -424,10 +438,10 @@ var player_cmp = {
 		context.restore( );
 	},
 
-	fixEspionsBytecode : function( ) {
+	fixUpEspions : function( ) {
 		// swap opcodes so the '... the power which we need' caption is displayed
-		//   opcode 0 pos 0x323
-		//   opcode 6 pos 0x324 str 0x3a
+		//   0322: op0
+		//   0323: op6 str 0x003a
 		console.assert( this.m_cmd[ 0x322 ] == 0 && this.m_cmd[ 0x323 ] == 0x18 && this.m_cmd[ 0x324 ] == 0 && this.m_cmd[ 0x325 ] == 0x3A );
 		this.m_cmd[ 0x322 ] = 6 * 4;
 		this.m_cmd[ 0x323 ] = 0;
@@ -444,7 +458,7 @@ var player_cmp = {
 	},
 
 	readUint16BE : function( data, offset ) {
-		var value = data.charCodeAt( offset ) * 256;
+		var value = data.charCodeAt( offset ) << 8;
 		value += data.charCodeAt( offset + 1 );
 		return value;
 	},
