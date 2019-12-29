@@ -454,6 +454,12 @@ var player_cmp = {
 			this.m_strings = strings_en;
 		} else if ( index == 1 ) {
 			this.m_strings = strings_fr;
+		} else if ( index == 2 ) {
+			this.m_strings = strings_gr;
+		} else if ( index == 3 ) {
+			this.m_strings = strings_it;
+		} else if ( index == 4 ) {
+			this.m_strings = strings_sp;
 		}
 	},
 
