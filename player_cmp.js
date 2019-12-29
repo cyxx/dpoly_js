@@ -8,6 +8,7 @@ var player_cmp = {
 	m_primitives : new Array( ),
 	m_savedPrimitives : new Array( ),
 	m_fixUpPalette : 0,
+	m_strings : strings_en,
 
 	init : function( canvas ) {
 		this.m_canvas = document.getElementById( canvas );
@@ -88,7 +89,6 @@ var player_cmp = {
 			switch ( opcode >> 2 ) {
 			case 0:
 			case 5:
-			case 9:
 				this.updateScreen( );
 				break;
 			case 1:
@@ -116,11 +116,24 @@ var player_cmp = {
 				break;
 			case 6:
 				var id = this.readNextWord( );
+				if ( id != 0xFFFF ) {
+					if ( id in this.m_strings ) {
+						console.log( 'caption:' + this.m_strings[ id ] );
+					} else {
+						console.log( "Invalid string:" + num );
+					}
+				}
 				break;
 			case 7:
 				break;
 			case 8:
 				this.m_pos += 3;
+				break;
+			case 9:
+				this.updateScreen( );
+				while ( this.readNextByte( ) != 0xFF ) {
+					this.readNextWord( );
+				}
 				break;
 			case 10:
 				var shape = this.readNextWord( );
@@ -173,6 +186,13 @@ var player_cmp = {
 				if (id != 0xFFFF) {
 					var x = this.readNextByte( );
 					var y = this.readNextByte( );
+					var color = 16 + (id >> 12);
+					var num = id & 0xFFF;
+					if ( num in this.m_strings ) {
+						this.m_primitives.push( { text : this.m_strings[ num ], x : x, y : y, color : color } );
+					} else {
+						console.log( "Invalid string:" + num );
+					}
 				}
 				break;
 			default:
@@ -189,9 +209,13 @@ var player_cmp = {
 		context.fillRect( 0, 0, this.m_canvas.width, this.m_canvas.height );
 		for (var i = 0; i < this.m_primitives.length; i++) {
 			var p = this.m_primitives[i];
-			context.globalAlpha = p.alpha ? .8 : 1.;
-			this.drawPrimitive( context, p.x, p.y, p.dx, p.dy, p.num, p.color, p.transform );
-			context.globalAlpha = 1.;
+			if ( p.text ) {
+				this.drawText( context, p.text, p.x, p.y, p.color );
+			} else {
+				context.globalAlpha = p.alpha ? .8 : 1.;
+				this.drawPrimitive( context, p.x, p.y, p.dx, p.dy, p.num, p.color, p.transform );
+				context.globalAlpha = 1.;
+			}
 		}
 		this.flipScreen();
 		this.m_yield = 5;
@@ -247,6 +271,19 @@ var player_cmp = {
 
 	drawShapeScaleRotate : function( num, x, y, z, ix, iy, r1, r2, r3 ) {
 		this.drawShape( num, x, y, { z : z, ix : ix, iy : iy, r1 : r1, r2 : r2, r3 : r3 } );
+	},
+
+	drawText : function( context, str, x, y, color ) {
+		context.save( );
+		context.fillStyle = context.strokeStyle = this.m_palette[ color ];
+		var size = 8 * this.m_scale;
+		context.font = 'normal ' + size + 'px monospace';
+		var lines = str.split( '|' );
+		for ( var i = 0; i < lines.length; ++i ) {
+			y += 1;
+			context.fillText( lines[ i ], x * size, y * size );
+		}
+		context.restore( );
 	},
 
 	setDefaultPalette : function( ) {
@@ -385,6 +422,14 @@ var player_cmp = {
 			}
 		}
 		context.restore( );
+	},
+
+	set_language : function( index ) {
+		if ( index == 0 ) {
+			this.m_strings = strings_en;
+		} else if ( index == 1 ) {
+			this.m_strings = strings_fr;
+		}
 	},
 
 	readUint16BE : function( data, offset ) {

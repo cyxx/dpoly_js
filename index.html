@@ -26,6 +26,10 @@
 				<audio id="music"></audio>
 				<canvas id="screen" width="480" height="256"></canvas>
 				<div style="float: left;">
+					<select onchange="onLanguageChange()" id="languageSelect">
+						<option>English</option>
+						<option>French</option>
+					</select>
 					<input type="checkbox" onclick="onClippingClick()" id="clippingCheckbox">240x128 (no clipping)</input>
 				</div>
 				<div style="float: right;">
@@ -56,6 +60,12 @@
                 <div style="background-color: #eeeeee; margin: 20px 0px 0px 0px; padding: 8px;">
                         <strong>dpoly.js</strong> code is available on <a href="http://github.com/cyxx/dpoly_js">github.com</a>.
                 </div>
+		<script>
+			window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+			ga('create','UA-100340326-5','auto');
+			ga('send','pageview');
+		</script>
+		<script async src='https://www.google-analytics.com/analytics.js'></script>
 		<script type="text/javascript" src="dpoly.min.js"></script>
 		<script type="text/javascript">
 			var CUTSCENES = [
@@ -132,6 +142,9 @@
 					music.src = "music/" + CUTSCENES[ cutscene ].music;
 					music.play( );
 				}
+			}
+			function onLanguageChange( ) {
+				player_cmp.set_language( languageSelect.selectedIndex );
 			}
 			function onClippingClick( ) {
 				player_cmp.set_clipping( clippingCheckbox.checked );
