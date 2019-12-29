@@ -28,6 +28,10 @@ var player_cmp = {
 		}
 	},
 
+	set_clipping : function( clip ) {
+		this.m_scale = clip ? 1 : this.m_canvas.width / 240;
+	},
+
 	readOffset : function( pos ) {
 		if ( pos != 0 ) {
 			pos = this.readWord( this.m_cmd, ( pos + 1 ) * 2 );
@@ -238,7 +242,7 @@ var player_cmp = {
 	},
 
 	drawShapeScale : function( num, x, y, z, ix, iy ) {
-		this.drawShape( num, x, y, { z : z, ix : ix, iy : iy } );
+		this.drawShape( num, x, y, { z : z, ix : ix, iy : iy, r1 : 0, r2 : 90, r3 : 180 } );
 	},
 
 	drawShapeScaleRotate : function( num, x, y, z, ix, iy, r1, r2, r3 ) {
@@ -321,11 +325,13 @@ var player_cmp = {
 		var count = this.readByte( this.m_pol, offset );
 		offset++;
 
-		var pixelSize = this.m_scale;
-
 		context.fillStyle = context.strokeStyle = this.m_palette[ color ];
 		context.save( );
-		context.scale( pixelSize, pixelSize );
+		if ( this.m_scale == 1 ) {
+			context.translate( ( this.m_canvas.width - 240 ) / 2, ( this.m_canvas.height - 128 ) / 2 );
+		} else {
+			context.scale( this.m_scale, this.m_scale );
+		}
 
 		var xpos = this.toSignedWord( this.readWord( this.m_pol, offset ) );
 		offset += 2;
@@ -356,7 +362,7 @@ var player_cmp = {
 				context.fill( );
 			}
 		} else if (count == 0) {
-			context.fillRect( x, y, pixelSize, pixelSize );
+			context.fillRect( x, y, this.m_scale, this.m_scale );
 		} else {
 			context.beginPath( );
 			context.moveTo( x, y );

@@ -29,6 +29,10 @@ var player_set = {
 		}
 	},
 
+	set_clipping : function( clip ) {
+		this.m_scale = clip ? 1 : this.m_canvas.width / 240;
+	},
+
 	toSignedWord : function( value ) {
 		return value - ((value & 0x8000) << 1);
 	},
@@ -111,7 +115,12 @@ var player_set = {
 		context.fillStyle = '#000';
 		context.fillRect( 0, 0, this.m_canvas.width, this.m_canvas.height );
 		context.save( );
-		context.scale( this.m_scale, this.m_scale );
+
+		if ( this.m_scale == 1 ) {
+			context.translate( ( this.m_canvas.width - 240 ) / 2, ( this.m_canvas.height - 128 ) / 2 );
+		} else {
+			context.scale( this.m_scale, this.m_scale );
+		}
 
 		this.drawShape( context, this.m_backgroundShapeOffsets[ shape ], 0, 0 );
 		for ( var i = 0; i < count; ++i ) {
