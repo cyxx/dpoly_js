@@ -1,4 +1,8 @@
 var strings_en = {
+	0x00 : "That's my story,|just the way I lived it.",
+	0x01 : "The galaxy I am in|today doesn't|appear on any of|our navigation|charts.",
+	0x02 : "It's impossible|for me to calculate|my return|trajectory.",
+	0x03 : "I'll probably drift|in space for a very|long time...",
 	0x24 : "Hey, it's me!",
 	0x25 : "Hi Conrad. You must be|wondering how you recorded|this message without|remembering it.",
 	0x26 : "Good question, but it would|take too long to explain|and time is short, and if|you want to save your hide...",
@@ -27,6 +31,10 @@ var strings_en = {
 	0x45 : "Some hours later, Conrad|boards the \"Star Providence\"|-destination: EARTH."
 };
 var strings_fr = {
+	0x00 : "VOILA MON HISTOIRE|TELLE QUE JE L'AI VECUE.",
+	0x01 : "LA GALAXIE OU JE ME|TROUVE AUJOURD'HUI|N'EST REPERTORIEE|SUR AUCUNE DE|MES CARTES DE|NAVIGATION.",
+	0x02 : "IL M'EST IMPOSSIBLE|DE CALCULER MA|TRAJECTOIRE DE|RETOUR.",
+	0x03 : "JE VAIS PROBABLEMENT DERIVER|DANS L'ESPACE PENDANT|TRES LONGTEMPS...",
 	0x24 : "EH, MAIS C'EST MOI!",
 	0x25 : "SALUT CONRAD! TU TE DEMANDES|SUREMENT COMMENT TU AS PU|ENREGISTRER CE MESSAGE SANS|T'EN SOUVENIR.",
 	0x26 : "BONNE QUESTION MAIS CE SERAIT|TROP LONG A EXPLIQUER CAR LE|TEMPS PRESSE ET SI TU TIENS|A TA PEAU...",

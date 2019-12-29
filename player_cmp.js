@@ -120,7 +120,7 @@ var player_cmp = {
 					if ( id in this.m_strings ) {
 						console.log( 'caption:' + this.m_strings[ id ] );
 					} else {
-						console.log( "Invalid string:" + num );
+						console.log( "Invalid string:" + id );
 					}
 				}
 				break;
