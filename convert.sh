@@ -1,7 +1,7 @@
 #!/bin/sh
 set -x
 
-for f in chute debut desinteg espions holoseq intro logos memo pont taxi teleport voyage; do
+for f in chute debut desinteg espions gen genexp holoseq intro logos memo over pont taxi teleport voyage; do
 	openssl enc -e -base64 -in cine/$f.cmp > cine/$f.cmp.txt
 done
 

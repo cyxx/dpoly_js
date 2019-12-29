@@ -35,11 +35,14 @@
 						<option>debut</option>
 						<option>desinteg</option>
 						<option>espions</option>
+						<option>gen</option>
+						<option>genexp</option>
 						<option>holocube</option>
 						<option>intro</option>
 						<option>logos</option>
 						<option>mecha</option>
 						<option>memo</option>
+						<option>over</option>
 						<option>pont</option>
 						<option>taxi</option>
 						<option>teleport</option>
@@ -61,17 +64,20 @@
 				{ data : "debut.cmp.txt",    music : "debut.ogg",    offset : 0,      player : player_cmp },
 				{ data : "desinteg.cmp.txt", music : "desinteg.ogg", offset : 0,      player : player_cmp },
 				{ data : "espions.cmp.txt",  music : "reunion.ogg",  offset : 0,      player : player_cmp },
+				{ data : "gen.cmp.txt",      music : null,           offset : 0,      player : player_cmp },
+				{ data : "genexp.cmp.txt",   music : null,           offset : 0,      player : player_cmp },
 				{ data : "holoseq.cmp.txt",  music : "holocube.ogg", offset : 0,      player : player_cmp },
 				{ data : "intro.cmp.txt",    music : "intro.ogg",    offset : 0,      player : player_cmp },
 				{ data : "logos.cmp.txt",    music : "logo.ogg",     offset : 0,      player : player_cmp },
 				{ data : "mecha.set.txt",    music : null,           offset : 0x822A, player : player_set },
 				{ data : "memo.cmp.txt",     music : "memoire.ogg",  offset : 0,      player : player_cmp },
+				{ data : "over.cmp.txt",     music : null,           offset : 0,      player : player_cmp },
 				{ data : "pont.cmp.txt",     music : null,           offset : 0,      player : player_cmp },
 				{ data : "taxi.cmp.txt",     music : "taxi.ogg",     offset : 0,      player : player_cmp },
 				{ data : "teleport.cmp.txt", music : null,           offset : 0,      player : player_cmp },
 				{ data : "voyage.cmp.txt",   music : "voyage.ogg",   offset : 0,      player : player_cmp }
 			];
-			var cutscene = 6;
+			var cutscene = 8;
 			var player = null;
 
 			nameSelect.selectedIndex = cutscene;
