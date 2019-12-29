@@ -138,6 +138,9 @@
 					// Amiga uses a buggy (blue-ish) palette, fixed with DOS data file
 					player.setTaxiPalette( );
 				}
+				if ( CUTSCENES[ cutscene ].data == "espions.cmp.txt" ) {
+					player.fixEspionsBytecode( );
+				}
 				if ( CUTSCENES[ cutscene ].music ) {
 					music.src = "music/" + CUTSCENES[ cutscene ].music;
 					music.play( );

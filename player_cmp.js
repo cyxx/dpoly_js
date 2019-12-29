@@ -424,6 +424,17 @@ var player_cmp = {
 		context.restore( );
 	},
 
+	fixEspionsBytecode : function( ) {
+		// swap opcodes so the '... the power which we need' caption is displayed
+		//   opcode 0 pos 0x323
+		//   opcode 6 pos 0x324 str 0x3a
+		console.assert( this.m_cmd[ 0x322 ] == 0 && this.m_cmd[ 0x323 ] == 0x18 && this.m_cmd[ 0x324 ] == 0 && this.m_cmd[ 0x325 ] == 0x3A );
+		this.m_cmd[ 0x322 ] = 6 * 4;
+		this.m_cmd[ 0x323 ] = 0;
+		this.m_cmd[ 0x324 ] = 0x3A;
+		this.m_cmd[ 0x325 ] = 0;
+	},
+
 	set_language : function( index ) {
 		if ( index == 0 ) {
 			this.m_strings = strings_en;
