@@ -180,6 +180,8 @@ var player_set = {
 		this.m_rotationDataOffset = 0;
 		if ( offset == 0x822A ) {
 			this.readRotationData( data, 0x443A );
+		} else if ( offset == 0x3385 ) {
+			this.readRotationData( data, 0x1A86 );
 		}
 		this.m_backgroundShapeOffsets = new Array( );
 		var bgCount = this.readWord( data, offset ); offset += 2;

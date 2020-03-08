@@ -5,7 +5,7 @@ for f in chute debut desinteg espions fin gen genexp holoseq intro logos memo ov
 	openssl enc -e -base64 -in cine/$f.cmp > cine/$f.cmp.txt
 done
 
-for f in caillou mecha; do
+for f in caillou cdfiles jupiter mecha; do
 	openssl enc -e -base64 -in cine/$f.set > cine/$f.set.txt
 done
 
